@@ -1,5 +1,5 @@
 const path = require("path");
-
+require("dotenv").config({ silent: process.env.NODE_ENV === "production" });
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -11,9 +11,9 @@ app.use(cors());
 app.use(cookieParser());
 app.use(fileUpoad({ useTempFiles: true }));
 
-//Routes
-app.use("/user", require("./routes/userRoutes"));
 
+
+//Routes
 
 app.use((err, req, res, next) => {
   // because err.status is undefined
@@ -25,11 +25,16 @@ app.use((err, req, res, next) => {
 });
 __dirname = path.resolve();
 console.log(__dirname);
-
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
   app.get("/", (req, res) => {
     res.send("API is Runn....");
   });
-
+}
 
 const PORT = process.env.PORT || 4000;
 
@@ -53,3 +58,7 @@ mongoose
   .catch((error) => console.log(`${error} did not connect`));
 
 mongoose.set("useFindAndModify", false);
+
+// const CONNECTION_URL =
+//   "mongodb+srv://prateek:4qr3yNg0QzWha9CA@cluster0.rrzdv6q.mongodb.net/?retryWrites=true&w=majority";
+
