@@ -17,7 +17,7 @@ const Activate = () => {
     
       useEffect(()=>{
        alluser();
-      },[])
+      })
    console.log(user);
     
     
