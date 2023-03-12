@@ -11,7 +11,7 @@ app.use(cors());
 app.use(cookieParser());
 app.use(fileUpoad({ useTempFiles: true }));
 
-
+app.use("/user", require("./routes/userRoutes"));
 
 //Routes
 
